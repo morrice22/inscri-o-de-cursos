@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inscrição de curso</title>
+  <!-- Favicon do estilo original -->
+  <link rel="icon" href="https://raw.githubusercontent.com/morrice22/ico/refs/heads/main/favicon.ico" type="image/x-icon">
+
+  <style>
+    /* Reset básico */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    /* Estilo da página */
+    body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(135deg, hsl(221, 100%, 32%), hsl(221, 100%, 50%)); /* Gradiente de fundo */
+        color: #fff;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    /* Container principal */
+    .container {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        padding: 40px;
+        width: 100%;
+        max-width: 600px; /* Ajustado para formulário potencialmente maior */
+        text-align: center;
+        transition: all 0.3s ease;
+        color: #333; /* Cor de texto padrão */
+        margin: 20px 0; /* Adicionar margem vertical para rolagem */
+    }
+
+    .container:hover {
+        transform: scale(1.02);
+    }
+
+    /* Cabeçalho com logo (opcional, adicionado para consistência) */
+    header {
+        margin-bottom: 30px;
+    }
+
+    .logo {
+        width: 180px;
+        height: auto;
+        margin-bottom: 25px;
+    }
+
+    /* Título principal */
+    h1 {
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 25px; /* Aumentar espaço antes do form */
+        color: #343a40;
+        letter-spacing: 1px;
+    }
+
+    /* Estilos gerais para formulários dentro do container */
+    .container form {
+        margin-top: 0; /* Resetar margem do form original */
+        text-align: left; /* Alinhar labels e inputs à esquerda */
+    }
+
+    /* Estilo para grupos de formulário (label + input) */
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 8px;
+        color: #343a40;
+    }
+
+    /* Estilo geral para inputs, textareas, selects */
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group input[type="password"],
+    .form-group input[type="number"],
+    .form-group input[type="date"],
+    .form-group input[type="tel"],
+    .form-group textarea,
+    .form-group select {
+        width: 100%; /* Ocupar largura total do form-group */
+        padding: 12px 15px;
+        border: 2px solid #ccc;
+        border-radius: 8px;
+        font-size: 16px;
+        color: #333;
+        transition: border 0.3s ease;
+        box-sizing: border-box; /* Incluir padding e border na largura total */
+    }
+
+    .form-group input[type="text"]:focus,
+    .form-group input[type="email"]:focus,
+    .form-group input[type="password"]:focus,
+    .form-group input[type="number"]:focus,
+    .form-group input[type="date"]:focus,
+    .form-group input[type="tel"]:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+        border-color: #007bff;
+        outline: none;
+    }
+
+    /* Botão */
+    button, input[type="submit"], .form-group button {
+        padding: 12px 25px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 18px;
+        cursor: pointer;
+        width: 100%; /* Botão com largura total */
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        margin-top: 10px; /* Espaçamento acima do botão */
+    }
+
+    button:hover, input[type="submit"]:hover, .form-group button:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
+    }
+
+    button:active, input[type="submit"]:active, .form-group button:active {
+        transform: translateY(2px);
+    }
+
+    /* Mensagem de sucesso */
+    #mensagem {
+        margin-top: 20px;
+        text-align: center;
+        color: #2ecc71; /* Verde sucesso do estilo original */
+        font-weight: bold;
+        display: none;
+        padding: 10px;
+        background-color: #eafaf1;
+        border: 1px solid #bcf0d2;
+        border-radius: 8px;
+    }
+
+    /* Estilos do Modal adaptados */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5); /* Fundo mais escuro */
+        align-items: center; /* Centralizar verticalmente */
+        justify-content: center; /* Centralizar horizontalmente */
+        display: none; /* Escondido por padrão, JS controla */
+    }
+
+    .modal-content {
+        background-color: #fff;
+        margin: auto; /* Centralizado */
+        padding: 30px;
+        border: none;
+        width: 90%;
+        max-width: 500px;
+        border-radius: 10px; /* Borda do container */
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        text-align: left;
+    }
+
+    .modal-header {
+        font-size: 22px; /* Maior */
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #343a40; /* Cor do título */
+        border-bottom: 1px solid #eee;
+        padding-bottom: 15px;
+    }
+
+    .modal-body {
+        margin-bottom: 25px;
+        line-height: 1.6;
+        color: #555;
+    }
+    .modal-body p {
+        margin-bottom: 10px;
+    }
+    .modal-body strong {
+        color: #343a40;
+    }
+
+    .modal-footer {
+        display: flex;
+        justify-content: flex-end; /* Alinhar botões à direita */
+        gap: 10px; /* Espaço entre botões */
+    }
+
+    /* Estilo dos botões do modal */
+    .modal-footer button {
+        width: auto; /* Tamanho automático */
+        padding: 10px 20px;
+        font-size: 16px;
+        margin-top: 0;
+    }
+
+    .confirm-btn {
+        background-color: #2ecc71; /* Verde sucesso */
+    }
+    .confirm-btn:hover {
+        background-color: #28b463;
+    }
+
+    .cancel-btn {
+        background-color: #e74c3c; /* Vermelho erro */
+    }
+    .cancel-btn:hover {
+        background-color: #cb4335;
+    }
+
+  </style>
+
+  <script>
+    // Funções JS originais (mascaraCPF, mascaraCEP, pesquisarCEP, etc.)
+    function mascaraCPF(input) {
+      let value = input.value.replace(/\D/g, '').slice(0, 11);
+      if (value.length > 3 && value.length <= 6)
+        value = value.replace(/(\d{3})(\d+)/, '$1.$2');
+      else if (value.length > 6 && value.length <= 9)
+        value = value.replace(/(\d{3})(\d{3})(\d+)/, '$1.$2.$3');
+      else if (value.length > 9)
+        value = value.replace(/(\d{3})(\d{3})(\d{3})(\d+)/, '$1.$2.$3-$4');
+      input.value = value;
+    }
+
+    function mascaraCEP(input) {
+      var value = input.value.replace(/\D/g, '');
+      if (value.length <= 8) {
+        value = value.replace(/(\d{5})(\d{3})/, '$1-$2');
+        input.value = value;
+      }
+    }
+
+    function pesquisarCEP(cep) {
+      cep = cep.replace('-', '');
+      if (cep.length === 8) {
+        fetch('https://viacep.com.br/ws/' + cep + '/json/')
+          .then(response => response.json())
+          .then(data => {
+            if (!data.erro) {
+              // Adapte os IDs se necessário no seu HTML
+              if (document.getElementById('uf')) document.getElementById('uf').value = data.uf;
+              if (document.getElementById('cidade')) document.getElementById('cidade').value = data.localidade;
+              if (document.getElementById('logradouro')) document.getElementById('logradouro').value = data.logradouro;
+            } else {
+              alert('CEP não encontrado.');
+            }
+          })
+          .catch(error => {
+            alert('Erro ao buscar o CEP.');
+          });
+      }
+    }
+
+    function mostrarConfirmacao() {
+      var form = document.getElementById('alunoForm');
+      var modalBody = document.getElementById('modalBody');
+      var modal = document.getElementById('confirmacaoModal');
+      modalBody.innerHTML = '';
+      var valido = true;
+      var camposFaltando = [];
+
+      Array.from(form.elements).forEach(function(element) {
+        // Verificar apenas elementos com nome, que são required e estão vazios
+        if (element.name && element.required && !element.value.trim()) {
+            valido = false;
+            // Adicionar nome do campo (ou placeholder) à lista de campos faltando
+            camposFaltando.push(element.placeholder || element.name);
+        }
+        // Adicionar ao modal apenas se tiver nome e não for hidden
+        if (element.name && element.type !== 'hidden' && element.value) {
+            modalBody.innerHTML += '<p><strong>' + (element.placeholder || element.name) + ':</strong> ' + element.value + '</p>';
+        }
+      });
+
+      if (!valido) {
+          alert('Por favor, preencha os seguintes campos obrigatórios: ' + camposFaltando.join(', '));
+          return; // Interrompe a função se houver campos faltando
+      }
+
+      // Se tudo estiver válido, mostra o modal
+      modal.style.display = 'flex'; // Usar flex para centralizar com align-items/justify-content
+    }
+
+    function fecharModal() {
+      document.getElementById('confirmacaoModal').style.display = 'none';
+    }
+
+    function confirmarEnvio() {
+      var form = document.getElementById('alunoForm');
+      var confirmBtn = document.querySelector('.confirm-btn');
+      var mensagemDiv = document.getElementById('mensagem');
+
+      confirmBtn.disabled = true;
+      confirmBtn.textContent = 'Enviando...';
+      mensagemDiv.style.display = 'none'; // Esconder mensagem anterior
+
+      var formData = new FormData(form);
+      // *** SUBSTITUA PELA URL CORRETA DO SEU WEB APP SCRIPT ***
+      fetch('https://script.google.com/macros/s/AKfycbwalxZL2Qy2Nr85Up4SIuKS7gbVlfFANDjm58aHqjyXz09cFxs0Q7b1A33w_WoIfJC-/exec', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json()) // Assumindo que o script retorna JSON
+      .then(data => {
+        if (data.result === 'success') { // Verificar resposta do script
+          mensagemDiv.textContent = 'Dados enviados com sucesso!';
+          mensagemDiv.style.color = '#2ecc71'; // Verde
+          mensagemDiv.style.display = 'block';
+          form.reset();
+          fecharModal();
+          // Opcional: esconder mensagem após alguns segundos
+          setTimeout(() => { mensagemDiv.style.display = 'none'; }, 5000);
+        } else {
+          // Exibir erro retornado pelo script ou um erro genérico
+          alert('Erro ao enviar o formulário: ' + (data.message || 'Resposta inesperada do servidor.'));
+        }
+      })
+      .catch(error => {
+        console.error('Erro no fetch:', error);
+        alert('Erro de conexão ao enviar o formulário. Verifique sua internet e tente novamente.');
+      })
+      .finally(() => {
+          // Reabilitar botão independentemente do resultado
+          confirmBtn.disabled = false;
+          confirmBtn.textContent = 'Confirmar';
+      });
+    }
+
+    // Fechar modal clicando fora
+    window.onclick = function(event) {
+      var modal = document.getElementById('confirmacaoModal');
+      if (event.target == modal) {
+        fecharModal();
+      }
+    }
+  </script>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+        <img src="https://i.imgur.com/cyfqmP7.png" alt="Logo" class="logo">
+    </header>
+    <h1>Inscrição de curso</h1> <!-- Título adaptado -->
+
+    <form id="alunoForm">
+
+
+      <div class="form-group">
+        <input type="text" id="nome_do_aluno" name="nome do aluno" placeholder="NOME COMPLETO" required>
+      </div>
+
+      <div class="form-group">
+        <input type="text" id="cpf" name="cpf" placeholder="CPF" maxlength="14" oninput="mascaraCPF(this)" required>
+      </div>
+
+      <div class="form-group">
+        <input type="text" id="whatsapp" name="whatsapp" placeholder="WHATSAPP" required>
+      </div>
+
+      <div class="form-group">
+        <input type="email" id="email" name="email" placeholder="EMAIL" required>
+      </div>
+
+      <div class="form-group">
+        <input type="text" id="outro_dado" name="outro dado" placeholder="CURSO QUE IRÁ PARTICIPAR" required>
+      </div>
+
+      <div class="form-group">
+        <button type="button" onclick="mostrarConfirmacao()">Enviar Cadastro</button>
+      </div>
+      <div id="mensagem"></div> <!-- Mensagem de sucesso/erro -->
+    </form>
+
+  </div> <!-- Fim .container -->
+
+  <!-- Modal de Confirmação -->
+  <div id="confirmacaoModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">Confirme seus dados</div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-footer">
+        <button class="cancel-btn" onclick="fecharModal()">Cancelar</button>
+        <button class="confirm-btn" onclick="confirmarEnvio()">Confirmar Envio</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
